@@ -1,6 +1,6 @@
 import React from 'react';
 import logoUrl from '../assets/logofinal.svg';
-
+import {Link} from 'react-router-dom';
 function Navbar() {
     return (
         <nav className="fixed w-full h-16 bg-brandBlue text-white px-6 flex items-center justify-between ">
@@ -18,12 +18,12 @@ function Navbar() {
             </div>
 
             <div className="flex items-center gap-4">
-                <button className="rounded-xl px-4 py-2 text-sm font-bold hover:bg-gray-700">
+                <Link to="/login" className="rounded-xl px-4 py-2 text-sm font-bold hover:bg-gray-700">
                     Log in
-                </button>
-                <button className="bg-brandBlue rounded-xl px-6 py-2 text-sm font-bold hover:bg-brandBlueHover">
+                </Link>
+                <Link to="/signup" className="bg-brandBlue rounded-xl px-6 py-2 text-sm font-bold hover:bg-brandBlueHover">
                     Sign up
-                </button>
+                </Link>
             </div>
         </nav>
     );
