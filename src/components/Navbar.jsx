@@ -3,7 +3,7 @@ import logoUrl from '../assets/logofinal.svg';
 
 function Navbar() {
     return (
-        <nav className="relative w-full h-16 bg-brandDark text-white px-6 flex items-center justify-between">
+        <nav className="relative w-full h-16 bg-brandBlue text-white px-6 flex items-center justify-between ">
             <div className="flex items-center">
                 <img src={logoUrl} alt="BBetter logo" className="h-12 w-12" />
             </div>
