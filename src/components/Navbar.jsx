@@ -3,12 +3,12 @@ import logoUrl from '../assets/logofinal.svg';
 
 function Navbar() {
     return (
-        <nav className="w-full h-16 bg-brandDark text-white px-6 flex items-center">
+        <nav className="relative w-full h-16 bg-brandDark text-white px-6 flex items-center justify-between">
             <div className="flex items-center">
                 <img src={logoUrl} alt="BBetter logo" className="h-12 w-12" />
             </div>
 
-            <div className="flex gap-6 mx-auto">
+            <div className="absolute left-1/2 transform -translate-x-1/2 flex gap-4">
                 <button className="rounded-xl px-4 py-2 text-sm font-bold hover:bg-gray-700">
                     Pricing
                 </button>

@@ -2,7 +2,8 @@ import React from 'react';
 
 function HeadingBody() {
   return (
-      <div className='flex flex-col items-center justify-center'>
+
+      <div className='flex flex-col items-center  min-h-screen min-w-screen  bg-brandPrussian '>
           <h1 className="text-center font-bold text-xl font-inter w-fit">
               Build better habits,
           </h1>
