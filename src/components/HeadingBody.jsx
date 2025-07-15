@@ -1,10 +1,11 @@
 import React from 'react';
 import ema from '../assets/ema.png';
 import john from '../assets/john.png';
+import {Link} from "react-router-dom";
 
 function HeadingBody() {
     return (
-        <div className="flex flex-col items-center min-h-screen bg-white px-4">
+        <div className="flex font-inter flex-col items-center min-h-screen bg-white px-4">
 
             <div className="mt-20 text-center max-w-2xl pt-10  ">
                 <h1 className="font-bold font-inter text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-brandBlue leading-snug">
@@ -13,9 +14,9 @@ function HeadingBody() {
                 <p className="mt-6 text-base sm:text-lg md:text-xl text-gray-600 font-medium">
                     Harness the power of daily routines to transform your lifestyle.
                 </p>
-                <button className="mt-8 bg-brandBlue hover:bg-brandBlueHover px-6 py-3 rounded-xl font-semibold text-white transition">
+                <Link to='/dashbord' className="mt-8 bg-brandBlue hover:bg-brandBlueHover px-6 py-3 rounded-xl font-semibold text-white transition">
                     Try BBetter Free
-                </button>
+                </Link>
             </div>
 
 
@@ -32,7 +33,7 @@ function HeadingBody() {
 
                 <div className="flex flex-col justify-center items-center px-4">
                     <div className="bg-brandBlue/10 backdrop-blur-sm p-8 rounded-2xl shadow-lg border border-brandBlue/20 max-w-[600px]">
-                        <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-brandBlue leading-snug mb-4">
+                        <h2 className="text-2xl font-inter sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-brandBlue leading-snug mb-4">
                             Want to be smart and jacked like John—<br className="hidden md:block" />
                             or pretty and driven like Ema?
                         </h2>

@@ -2,7 +2,7 @@ import {Link} from "react-router-dom";
 function SignUpPage() {
     return (
         <div>
-            <div className="flex items-center min-h-screen bg-white dark:bg-gray-900">
+            <div className="flex items-center min-h-screen bg-brandPrussian">
                 <div className="container mx-auto">
                     <div className="max-w-md mx-auto my-10">
                         <div className="text-center">
