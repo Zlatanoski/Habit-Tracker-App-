@@ -9,6 +9,7 @@ import {
     PencilIcon,
     TrashIcon,
 } from '@heroicons/react/24/solid';
+import VerticalWeeklyTable from './VerticalWeeklyTable';
 import { Link } from 'react-router-dom';
 
 const menuItems = [
@@ -50,45 +51,7 @@ export default function Dashboard() {
                 {/* Table Centered */}
                 <div className="flex-1 bg-gray-800 p-4 rounded shadow">
                     <h1 className="text-2xl font-bold mb-4">Your Habits</h1>
-                    <table className="w-full text-left text-sm">
-                        <thead>
-                        <tr className="text-gray-400 border-b border-gray-600">
-                            <th className="p-2">Habit</th>
-                            <th className="p-2">Streak</th>
-                            <th className="p-2">Status</th>
-                            <th className="p-2">Actions</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {habits.map((habit) => (
-                            <tr key={habit.id} className="border-b border-gray-700 hover:bg-gray-700">
-                                <td className="p-2">{habit.name}</td>
-                                <td className="p-2">{habit.streak}</td>
-                                <td className="p-2">
-                    <span
-                        className={`px-2 py-1 rounded text-xs font-semibold ${
-                            habit.status === 'Approved'
-                                ? 'bg-green-700 text-green-200'
-                                : habit.status === 'Pending'
-                                    ? 'bg-yellow-700 text-yellow-200'
-                                    : 'bg-red-700 text-red-200'
-                        }`}
-                    >
-                      {habit.status}
-                    </span>
-                                </td>
-                                <td className="p-2 space-x-2">
-                                    <button className="text-blue-400 hover:text-blue-200">
-                                        <PencilIcon className="w-5 h-5 inline" />
-                                    </button>
-                                    <button className="text-red-400 hover:text-red-200">
-                                        <TrashIcon className="w-5 h-5 inline" />
-                                    </button>
-                                </td>
-                            </tr>
-                        ))}
-                        </tbody>
-                    </table>
+                    <VerticalWeeklyTable></VerticalWeeklyTable>
                 </div>
 
                 {/* Right Panel for Streaks or Widgets */}
