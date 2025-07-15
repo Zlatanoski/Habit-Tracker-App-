@@ -1,5 +1,5 @@
 import React from 'react';
-
+import {Link} from 'react-router-dom';
 function LoginPage() {
   return (
     <div>
@@ -28,6 +28,8 @@ function LoginPage() {
                             <div className="mb-6">
                                 <button type="button" className="w-full px-3 py-4 text-white bg-indigo-500 rounded-md focus:bg-indigo-600 focus:outline-none">Sign in</button>
                             </div>
+                            <p className="text-gray-600">Already have an account?</p>
+                            <Link to='/signup' className="text-[14px]  text-indigo-400 focus:outline-none focus:underline focus:text-indigo-500 dark:focus:border-indigo-800 hover:text-indigo-500 dark:hover:text-indigo-300">Sign up</Link>
                         </form>
                     </div>
                 </div>
