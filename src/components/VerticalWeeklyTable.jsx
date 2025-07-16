@@ -30,12 +30,36 @@ export default function VerticalWeeklyTower() {
     const [completed,setCompleted] = useState({});
     const [skipped, setSkipped] = useState({});
 
+    //Function to mark a task as completed when clicked the button
     const handleCompleted = (day ,idx) => {
         const key = `${day}-${idx}`;
 
 
+        if(completed[key] || skipped[key]) return;
+
+        setCompleted(prev =>({
+            ...prev,
+            [key]:true,
+        }));
+        console.log("Task completed ")
+
+
+
+
+
     }
 
+    //Function to mark a task as skipped when clicked the button
+    const handleSkipped = (day ,idx) => {
+        const key = `${day}-${idx}`;
+
+        if(completed[key] || skipped[key]) return;
+
+        setSkipped(prev =>({
+            ...prev,
+            [key]:true,
+        }));
+    }
 
 
     const dayNames = Object.keys(habitsByDay);
@@ -47,21 +71,37 @@ export default function VerticalWeeklyTower() {
             {/* Columns for each day */}
             <div className="grid grid-cols-7 gap-4 min-w-[900px]">
                 {dayNames.map((day) => (
+
+
+
                     <div key={day} className="flex flex-col items-center">
                         {/* Habit cards stacked vertically */}
                         <div className="space-y-3 w-full">
-                            {habitsByDay[day].map((habit, idx) => (
+                            {habitsByDay[day].map((habit, idx) => {
+
+                                const key = `${day}-${idx}`;
+                                let bgColor = "bg-gray-800"
+                                if (completed[key]) {
+                                    bgColor = 'bg-green-800'
+                                }
+                                else if(skipped[key]) {
+                                    bgColor = 'bg-red-800'
+                                }
+
+                                return(
                                 <div
                                     key={idx}
-                                    className={`border-2 p-3 rounded bg-gray-800 text-sm ${periodColors[habit.period]}`}
+                                    className={`border-2 p-3 rounded ${bgColor} text-sm ${periodColors[habit.period]}`}
                                 >
                                     <div className="font-medium">{habit.name}</div>
                                     <div className="text-gray-400">{habit.time}</div>
                                     <div className=" flex items-center justify-between">
                                         <div className=" w-fit">
-                                            <button  className="text-green-400 text-center">Completed</button>
+                                            <button onClick={() => handleCompleted(day, idx)}
+                                                    className="text-green-400 text-center">Completed
+                                            </button>
                                         </div>
-                                        <div className=" w-fit">
+                                        <div onClick={() => handleSkipped(day, idx)} className=" w-fit">
                                             <button className="text-red-500 text-center">Skip</button>
                                         </div>
 
@@ -69,7 +109,8 @@ export default function VerticalWeeklyTower() {
                                     </div>
 
                                 </div>
-                            ))}
+                                );
+                            })}
                         </div>
 
                         {/* Day label */}
@@ -77,7 +118,7 @@ export default function VerticalWeeklyTower() {
 
                         {/* Add Button */}
                         <button
-                            onClick={() => handleAddHabit(day)}
+                            onClick={() => handleAddHabit(day,idx)}
                             className="mt-2 text-xs px-3 py-1 bg-gray-700 text-white border border-dashed border-gray-500 rounded hover:bg-gray-600"
                         >
                             + Add Habit
