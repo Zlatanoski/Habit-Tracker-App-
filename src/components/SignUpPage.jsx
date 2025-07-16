@@ -1,5 +1,27 @@
 import {Link} from "react-router-dom";
+import {supabase} from "../supabaseClient";
+import {useState} from "react";
+
 function SignUpPage() {
+    const [name, setName] = useState("");
+    const [surname, setSurname] = useState("");
+    const [email,setEmail] = useState("");
+    const [password,setPassword] = useState("");
+
+    const handleSignUp = async (e) => {
+        e.preventDefault(); // if this is not called then react refreshes and loses state
+
+        const {data , error} = await supabase.auth.signUp({name,surname,email,password,});  // data and error as object because thats how supabase returns objects
+
+        if (error) {
+            alert(error.message);
+        } else {
+            alert('Check your email to confirm your account!');
+        }
+
+    }
+
+
     return (
         <div>
             <div className="flex items-center min-h-screen bg-brandPrussian">
@@ -10,7 +32,7 @@ function SignUpPage() {
                             <p className="text-gray-500 dark:text-gray-400">Create your account to get started</p>
                         </div>
                         <div className="m-7">
-                            <form action="">
+                            <form  onSubmit={handleSignUp} >
                                 <div className="grid grid-cols-2 gap-4 mb-6">
                                     <div>
                                         <label htmlFor="firstName" className="block mb-2 text-sm text-gray-600 dark:text-gray-400">
@@ -21,6 +43,8 @@ function SignUpPage() {
                                             name="firstName"
                                             id="firstName"
                                             placeholder="John"
+                                            onChange={(e)=> setName(e.target.value)}
+
                                             className="w-full px-3 py-2 placeholder-gray-300 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300 dark:bg-gray-700 dark:text-white dark:placeholder-gray-500 dark:border-gray-600 dark:focus:ring-gray-900 dark:focus:border-gray-500"
                                         />
                                     </div>
@@ -33,6 +57,7 @@ function SignUpPage() {
                                             name="lastName"
                                             id="lastName"
                                             placeholder="Doe"
+                                            onChange={(e)=> setSurname(e.target.value)}
                                             className="w-full px-3 py-2 placeholder-gray-300 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300 dark:bg-gray-700 dark:text-white dark:placeholder-gray-500 dark:border-gray-600 dark:focus:ring-gray-900 dark:focus:border-gray-500"
                                         />
                                     </div>
@@ -45,6 +70,7 @@ function SignUpPage() {
                                         type="email"
                                         name="email"
                                         id="email"
+                                        onChange={(e)=> setEmail(e.target.value)}
                                         placeholder="you@company.com"
                                         className="w-full px-3 py-2 placeholder-gray-300 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300 dark:bg-gray-700 dark:text-white dark:placeholder-gray-500 dark:border-gray-600 dark:focus:ring-gray-900 dark:focus:border-gray-500"
                                     />
@@ -57,6 +83,7 @@ function SignUpPage() {
                                         type="password"
                                         name="password"
                                         id="password"
+                                        onChange={(e)=> setPassword(e.target.value)}
                                         placeholder="Your Password"
                                         className="w-full px-3 py-2 placeholder-gray-300 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300 dark:bg-gray-700 dark:text-white dark:placeholder-gray-500 dark:border-gray-600 dark:focus:ring-gray-900 dark:focus:border-gray-500"
                                     />
@@ -64,7 +91,7 @@ function SignUpPage() {
 
                                 <div className="mb-6">
                                     <button
-                                        type="button"
+                                        type="submit"
                                         className="w-full px-3 py-4 text-white bg-indigo-500 rounded-md hover:bg-indigo-600 focus:bg-indigo-600 focus:outline-none"
                                     >
                                         Sign up
