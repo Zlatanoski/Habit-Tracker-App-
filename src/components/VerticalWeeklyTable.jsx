@@ -1,4 +1,5 @@
 // components/VerticalWeeklyTower.jsx
+import { useState } from "react";
 
 const habitsByDay = {
     Monday: [
@@ -25,6 +26,18 @@ const periodColors = {
 };
 
 export default function VerticalWeeklyTower() {
+
+    const [completed,setCompleted] = useState({});
+    const [skipped, setSkipped] = useState({});
+
+    const handleCompleted = (day ,idx) => {
+        const key = `${day}-${idx}`;
+
+
+    }
+
+
+
     const dayNames = Object.keys(habitsByDay);
 
     return (
@@ -46,7 +59,7 @@ export default function VerticalWeeklyTower() {
                                     <div className="text-gray-400">{habit.time}</div>
                                     <div className=" flex items-center justify-between">
                                         <div className=" w-fit">
-                                            <button className="text-green-400 text-center">Completed</button>
+                                            <button  className="text-green-400 text-center">Completed</button>
                                         </div>
                                         <div className=" w-fit">
                                             <button className="text-red-500 text-center">Skip</button>

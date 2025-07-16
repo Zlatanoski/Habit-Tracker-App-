@@ -1,6 +1,35 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
+import {supabase} from "../supabaseClient";
+import {useState} from "react";
+import {useNavigate} from "react-router-dom";
 function LoginPage() {
+
+   const [email,setEmail]=useState('');
+   const [password,setPassword]=useState('');
+   const navigate = useNavigate();
+
+
+    const handleLogin = async (e) => {
+        e.preventDefault();
+
+        const {data,error} = await supabase.auth.signInWithPassword({email,password})
+
+        if(error){
+            console.error("Error message:" ,error.message)
+            alert(error.message)
+            return
+        }
+        else{
+            console.log("Successfully logged in",data )
+            alert("Welcome back!");
+            navigate("/dashbord");
+        }
+
+
+    }
+
+
   return (
     <div>
 
@@ -13,22 +42,23 @@ function LoginPage() {
                         <p className="text-gray-500 dark:text-gray-400">Sign in to access your account</p>
                     </div>
                     <div className="m-7">
-                        <form action="">
+                        <form action="" onSubmit={handleLogin}>
                             <div className="mb-6">
                                 <label htmlFor="email" className="block mb-2 text-sm text-gray-600 dark:text-gray-400">Email Address</label>
-                                <input type="email" name="email" id="email" placeholder="you@company.com" className="w-full px-3 py-2 placeholder-gray-300 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300 dark:bg-gray-700 dark:text-white dark:placeholder-gray-500 dark:border-gray-600 dark:focus:ring-gray-900 dark:focus:border-gray-500" />
+                                <input type="email" name="email" id="email" placeholder="you@company.com" onChange={(e)=>setEmail(e.target.value)} required className="w-full px-3 py-2 placeholder-gray-300 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300 dark:bg-gray-700 dark:text-white dark:placeholder-gray-500 dark:border-gray-600 dark:focus:ring-gray-900 dark:focus:border-gray-500" />
                             </div>
                             <div className="mb-6">
                                 <div className="flex justify-between mb-2">
                                     <label htmlFor="password" className="text-sm text-gray-600 dark:text-gray-400">Password</label>
                                     <a className="text-sm text-gray-400 focus:outline-none focus:text-indigo-500 hover:text-indigo-500 dark:hover:text-indigo-300">Forgot password?</a>
                                 </div>
-                                <input type="password" name="password" id="password" placeholder="Your Password" className="w-full px-3 py-2 placeholder-gray-300 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300 dark:bg-gray-700 dark:text-white dark:placeholder-gray-500 dark:border-gray-600 dark:focus:ring-gray-900 dark:focus:border-gray-500" />
+                                <input type="password" name="password" id="password" placeholder="Your Password" onChange={(e)=>setPassword(e.target.value)} required className="w-full px-3 py-2 placeholder-gray-300 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300 dark:bg-gray-700 dark:text-white dark:placeholder-gray-500 dark:border-gray-600 dark:focus:ring-gray-900 dark:focus:border-gray-500" />
                             </div>
                             <div className="mb-6">
-                                <button type="button" className="w-full px-3 py-4 text-white bg-indigo-500 rounded-md focus:bg-indigo-600 focus:outline-none">Sign in</button>
+                                <button type="submit" className="w-full px-3 py-4 text-white bg-indigo-500 rounded-md focus:bg-indigo-600 focus:outline-none">Sign in</button>
                             </div>
                             <p className="text-gray-600">Already have an account?</p>
+
                             <Link to='/signup' className="text-[14px]  text-indigo-400 focus:outline-none focus:underline focus:text-indigo-500 dark:focus:border-indigo-800 hover:text-indigo-500 dark:hover:text-indigo-300">Sign up</Link>
                         </form>
                     </div>

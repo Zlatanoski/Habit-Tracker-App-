@@ -13,11 +13,11 @@ import VerticalWeeklyTable from './VerticalWeeklyTable';
 import { Link } from 'react-router-dom';
 
 const menuItems = [
-    { label: 'Dashboard', icon: HomeIcon, path: '/dashboard' },
+    { label: 'Dashboard', icon: HomeIcon, path: '/dashbord' },
     { label: 'Add Habit', icon: PlusCircleIcon, path: '/add-habit' },
     { label: 'Progress', icon: ChartBarIcon, path: '/progress' },
     { label: 'Profile', icon: UserCircleIcon, path: '/profile' },
-    { label: 'Logout', icon: ArrowLeftOnRectangleIcon, path: '/logout' },
+    { label: 'Logout', icon: ArrowLeftOnRectangleIcon, path: '/' },
 ];
 
 const habits = [
