@@ -3,8 +3,9 @@ import {Link} from 'react-router-dom';
 import {supabase} from "../supabaseClient";
 import {useState} from "react";
 import {useNavigate} from "react-router-dom";
+import Alert from '@mui/material/Alert';
 function LoginPage() {
-
+    const [message,setMessage] = useState('');
    const [email,setEmail]=useState('');
    const [password,setPassword]=useState('');
    const navigate = useNavigate();
@@ -17,13 +18,18 @@ function LoginPage() {
 
         if(error){
             console.error("Error message:" ,error.message)
-            alert(error.message)
+            setMessage('Wrong email or password!');
+
             return
         }
         else{
             console.log("Successfully logged in",data )
-            alert("Welcome back!");
-            navigate("/dashbord");
+
+                setMessage("Logged in successfully!");
+            setTimeout(() => {
+                navigate("/dashbord");
+            }, 1500);
+
         }
 
 
@@ -32,7 +38,15 @@ function LoginPage() {
 
   return (
     <div>
+        {message && (
 
+            <Alert variant="outlined" severity={message === "Logged in successfully!" ? "success" : "error"}>
+                {message}
+            </Alert>
+
+
+
+        )}
 
         <div className="flex items-center min-h-screen bg-brandPrussian">
             <div className="container mx-auto">

@@ -1,6 +1,6 @@
 // components/VerticalWeeklyTower.jsx
 import { useState } from "react";
-
+import ChooseHabitDialog from "./ChooseHabitDialog";
 const habitsByDay = {
     Monday: [
         { name: 'Run', time: '8 AM', period: 'morning' },
@@ -26,6 +26,8 @@ const periodColors = {
 };
 
 export default function VerticalWeeklyTower() {
+    //Dialog for choosing habit to add
+    const [openedDialog,setOpenedDialog] = useState(false);
 
     const [completed,setCompleted] = useState({});
     const [skipped, setSkipped] = useState({});
@@ -48,6 +50,11 @@ export default function VerticalWeeklyTower() {
 
 
     }
+    const handleSaveHabit = (habitData) => {
+        console.log('Habit saved:', habitData);
+        // e.g. push to your state or Supabase
+        setOpenedDialog(false);         // close the dialog after saving
+    };
 
     //Function to mark a task as skipped when clicked the button
     const handleSkipped = (day ,idx) => {
@@ -118,11 +125,12 @@ export default function VerticalWeeklyTower() {
 
                         {/* Add Button */}
                         <button
-                            onClick={() => handleAddHabit(day,idx)}
+                            onClick={() => setOpenedDialog(true)}
                             className="mt-2 text-xs px-3 py-1 bg-gray-700 text-white border border-dashed border-gray-500 rounded hover:bg-gray-600"
                         >
                             + Add Habit
                         </button>
+                        <ChooseHabitDialog open={openedDialog}  onSave={handleSaveHabit} onClose={() => setOpenedDialog(false) } />
 
                     </div>
                 ))}

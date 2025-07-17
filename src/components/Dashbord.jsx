@@ -11,6 +11,8 @@ import {
 } from '@heroicons/react/24/solid';
 import VerticalWeeklyTable from './VerticalWeeklyTable';
 import { Link } from 'react-router-dom';
+import ChooseHabitDialog from './ChooseHabitDialog';
+import {useState, useEffect} from 'react';
 
 const menuItems = [
     { label: 'Dashboard', icon: HomeIcon, path: '/dashbord' },
@@ -27,6 +29,7 @@ const habits = [
 ];
 
 export default function Dashboard() {
+
     return (
         <div className="flex min-h-screen bg-gray-900 text-white">
             {/* Sidebar */}
