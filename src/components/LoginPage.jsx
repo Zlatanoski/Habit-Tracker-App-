@@ -40,7 +40,7 @@ function LoginPage() {
     <div>
         {message && (
 
-            <Alert variant="outlined" severity={message === "Logged in successfully!" ? "success" : "error"}>
+            <Alert variant="filled" severity={message === "Logged in successfully!" ? "success" : "error"}>
                 {message}
             </Alert>
 

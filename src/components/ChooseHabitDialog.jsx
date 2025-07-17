@@ -16,7 +16,7 @@ function ChooseHabitDialog({ open, onClose, onSave }) {
     const [period, setPeriod] = useState('');
     const [time, setTime] = useState('');    // you can init to '07:00' if you want a default
     const [task, setTask] = useState('');
-
+    const [day, setDay] = useState('');
     const handleSave = () => {
         onSave({ period, time, task });
         onClose();
@@ -95,6 +95,23 @@ function ChooseHabitDialog({ open, onClose, onSave }) {
                         <MenuItem value="add_more" disabled>
                             Add more (coming soon)
                         </MenuItem>
+                    </Select>
+                </FormControl>
+                <FormControl fullWidth margin="dense">
+                    <InputLabel id="day-label">Day of the week</InputLabel>
+                    <Select
+                        labelId="day-label"
+                        value={day}
+                        label="Day of the week"
+                        onChange={e => setDay(e.target.value)}
+                    >
+                        <MenuItem value="monday">Monday</MenuItem>
+                        <MenuItem value="tuesday ">Tuesday</MenuItem>
+                        <MenuItem value="wednesday">Wednesday</MenuItem>
+                        <MenuItem value="thursday">Thursday</MenuItem>
+                        <MenuItem value="friday">Friday</MenuItem>
+                        <MenuItem value="saturday">Saturday</MenuItem>
+                        <MenuItem value="sunday">Sunday</MenuItem>
                     </Select>
                 </FormControl>
             </DialogContent>
