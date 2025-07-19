@@ -1,36 +1,60 @@
 // components/VerticalWeeklyTower.jsx
-import { useState } from "react";
+import { useState, useEffect} from "react";
 import ChooseHabitDialog from "./ChooseHabitDialog";
-const habitsByDay = {
-    Monday: [
-        { name: 'Run', time: '8 AM', period: 'morning' },
-        { name: 'Healthy Lunch', time: '12 PM', period: 'noon' },
-        { name: 'Reflect', time: '8 PM', period: 'evening' },
-    ],
-    Tuesday: [
-        { name: 'Meditate', time: '8:30 AM', period: 'morning' },
-        { name: 'Team Sync', time: '1 PM', period: 'noon' },
-        { name: 'Read', time: '9 PM', period: 'evening' },
-    ],
-    Wednesday: [],
-    Thursday: [],
-    Friday: [],
-    Saturday: [],
-    Sunday: [],
-};
+import {supabase} from "../supabaseClient";
+
 
 const periodColors = {
     morning: 'border-blue-500 text-blue-400',
     noon: 'border-orange-500 text-orange-400',
     evening: 'border-purple-500 text-purple-400',
 };
+const emptyBoard = { Monday: [],
+    Tuesday: [],
+    Wednesday: [],
+    Thursday: [],
+    Friday: [],
+    Saturday: [],
+    Sunday: []
+}
 
-export default function VerticalWeeklyTower() {
+
+export default function VerticalWeeklyTower({user}) {
+    // STORAGE FOR HABITS
+    const [habitsByDay, setHabitsByDay] = useState(emptyBoard);
+
+
     //Dialog for choosing habit to add
     const [openedDialog,setOpenedDialog] = useState(false);
 
     const [completed,setCompleted] = useState({});
     const [skipped, setSkipped] = useState({});
+    const [selectedDay,  setSelectedDay]  = useState(null)
+
+    async function fetchHabits() {
+        const { data, error } = await supabase
+            .from("habits")
+            .select("*")
+        if (error) {
+            console.error("Fetch failed:", error)
+            return
+        }
+        // 2) group by day
+        const grouped = { ...emptyBoard }
+        data.forEach(h => {
+            if (grouped[h.day]) grouped[h.day].push(h)
+        })
+        setHabitsByDay(grouped)
+    }
+
+    // 3) kick off the fetch whenever `user` changes
+    useEffect(() => {
+        if (user){
+            fetchHabits()
+        } else {
+            setHabitsByDay(emptyBoard)   // clear on logout
+        }
+    }, [user])
 
     //Function to mark a task as completed when clicked the button
     const handleCompleted = (day ,idx) => {
@@ -50,11 +74,30 @@ export default function VerticalWeeklyTower() {
 
 
     }
-    const handleSaveHabit = (habitData) => {
-        console.log('Habit saved:', habitData);
-        // e.g. push to your state or Supabase
-        setOpenedDialog(false);         // close the dialog after saving
-    };
+    async function handleSaveHabit(habitData) {
+        const row = {
+            name:   habitData.task,
+            time:   habitData.time,
+            period: habitData.period,
+            day:    selectedDay,
+        }
+
+        // --- notice the { returning: 'minimal' } here ---
+        const { data, error } = await supabase
+            .from('habits')
+            .insert([ row ], { returning: 'minimal' })
+
+        console.log('Insert response:', { data, error })
+
+        if (error) {
+            console.error('Insert failed:', error)
+        } else {
+            await fetchHabits()
+            setOpenedDialog(false)
+            setSelectedDay(null)
+        }
+    }
+
 
     //Function to mark a task as skipped when clicked the button
     const handleSkipped = (day ,idx) => {
@@ -125,7 +168,9 @@ export default function VerticalWeeklyTower() {
 
                         {/* Add Button */}
                         <button
-                            onClick={() => setOpenedDialog(true)}
+                            onClick={() => {
+                                setSelectedDay(day)
+                                setOpenedDialog(true)}}
                             className="mt-2 text-xs px-3 py-1 bg-gray-700 text-white border border-dashed border-gray-500 rounded hover:bg-gray-600"
                         >
                             + Add Habit

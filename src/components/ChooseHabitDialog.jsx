@@ -65,18 +65,16 @@ function ChooseHabitDialog({ open, onClose, onSave }) {
                     fullWidth
                     margin="dense"
                     value={time}
-                    onChange={e => setTime(e.target.value)}
+                    onChange={e => {
+                        console.log('Time input changed to:', e.target.value)
+                        setTime(e.target.value)
+                    }}
                     slotProps={{
-                        // targets the <input> inside the TextField
-                        input: {
-                            step: 60         // ⏱ only minutes, no seconds
-                        },
-                        // forces the label to shrink so it never overlaps
-                        label: {
-                            shrink: true
-                        }
+                        input: { step: 60 },
+                        label: { shrink: true }
                     }}
                 />
+
 
                 {/* TASK TYPE */}
                 <FormControl fullWidth margin="dense">
