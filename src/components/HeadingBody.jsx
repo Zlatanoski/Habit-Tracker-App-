@@ -14,7 +14,7 @@ function HeadingBody() {
                 <p className="mt-6 text-base sm:text-lg md:text-xl text-gray-600 font-medium">
                     Harness the power of daily routines to transform your lifestyle.
                 </p>
-                <Link to='/dashbord' className="mt-8 bg-brandBlue hover:bg-brandBlueHover px-6 py-3 rounded-xl font-semibold text-white transition">
+                <Link to='/' className="mt-8 bg-brandBlue hover:bg-brandBlueHover px-6 py-3 rounded-xl font-semibold text-white transition">
                     Try BBetter Free
                 </Link>
             </div>
