@@ -42,7 +42,7 @@ function App() {
         path="/dashbord"
         element={
           user
-              ? <Dashboard />
+              ? <Dashboard user={user}/>
               : <Navigate to="/login" replace />
         }
     />

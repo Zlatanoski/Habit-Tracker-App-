@@ -9,19 +9,22 @@ const periodColors = {
     noon: 'border-orange-500 text-orange-400',
     evening: 'border-purple-500 text-purple-400',
 };
-const emptyBoard = { Monday: [],
-    Tuesday: [],
-    Wednesday: [],
-    Thursday: [],
-    Friday: [],
-    Saturday: [],
-    Sunday: []
-}
+function makeEmptyBoard(){
+    return{
+        Monday: [],
+        Tuesday: [],
+        Wednesday: [],
+        Thursday: [],
+        Friday: [],
+        Saturday: [],
+        Sunday: []
 
+    }
+}
 
 export default function VerticalWeeklyTower({user}) {
     // STORAGE FOR HABITS
-    const [habitsByDay, setHabitsByDay] = useState(emptyBoard);
+    const [habitsByDay, setHabitsByDay] = useState(makeEmptyBoard);
 
 
     //Dialog for choosing habit to add
@@ -39,10 +42,20 @@ export default function VerticalWeeklyTower({user}) {
             console.error("Fetch failed:", error)
             return
         }
+
+        const grouped = { Monday: [],
+            Tuesday: [],
+            Wednesday: [],
+            Thursday: [],
+            Friday: [],
+            Saturday: [],
+            Sunday: []
+        }
+
+
         // 2) group by day
-        const grouped = { ...emptyBoard }
-        data.forEach(h => {
-            if (grouped[h.day]) grouped[h.day].push(h)
+        data.forEach(habit => {
+            if (grouped[habit.day]) grouped[habit.day].push(habit)
         })
         setHabitsByDay(grouped)
     }

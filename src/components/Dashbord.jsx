@@ -28,7 +28,7 @@ const habits = [
     { id: 3, name: 'Read Book', streak: 10, status: 'Denied' },
 ];
 
-export default function Dashboard() {
+export default function Dashboard({user}) {
 
     return (
         <div className="flex min-h-screen bg-gray-900 text-white">
@@ -54,7 +54,7 @@ export default function Dashboard() {
                 {/* Table Centered */}
                 <div className="flex-1 bg-gray-800 p-4 rounded shadow">
                     <h1 className="text-2xl font-bold mb-4">Your Habits</h1>
-                    <VerticalWeeklyTable></VerticalWeeklyTable>
+                    <VerticalWeeklyTable user={user}></VerticalWeeklyTable>
                 </div>
 
                 {/* Right Panel for Streaks or Widgets */}
