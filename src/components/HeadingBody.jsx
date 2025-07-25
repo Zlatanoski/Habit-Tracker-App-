@@ -11,10 +11,10 @@ function HeadingBody() {
                 <h1 className="font-bold font-inter text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-brandBlue leading-snug">
                     Build better habits,<br />One day at a time
                 </h1>
-                <p className="mt-6 text-base sm:text-lg md:text-xl text-gray-600 font-medium">
+                <p className="mt-6 mb-5 text-base sm:text-lg md:text-xl text-gray-600 font-medium">
                     Harness the power of daily routines to transform your lifestyle.
                 </p>
-                <Link to='/' className="mt-8 bg-brandBlue hover:bg-brandBlueHover px-6 py-3 rounded-xl font-semibold text-white transition">
+                <Link to='/' className=" mt-8 bg-brandBlue hover:bg-brandBlueHover px-6 py-3 rounded-xl font-semibold text-white transition">
                     Try BBetter Free
                 </Link>
             </div>
