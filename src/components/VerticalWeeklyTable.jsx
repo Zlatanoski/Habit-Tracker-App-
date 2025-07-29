@@ -29,10 +29,31 @@ export default function VerticalWeeklyTower({user}) {
 
     //Dialog for choosing habit to add
     const [openedDialog,setOpenedDialog] = useState(false);
-
+    const [userName, setUserName] = useState("");
     const [completed,setCompleted] = useState({});
     const [skipped, setSkipped] = useState({});
     const [selectedDay,  setSelectedDay]  = useState(null)
+
+    useEffect(()=>{
+        const fetchUserNames = async () => {
+
+            const {data, error} = await supabase.auth.getUser();
+
+            if(error){
+                console.error("Failed to fetch user data.");
+                return;
+            }
+            const user = data.user;
+            const name = user?.user_metadata?.name;
+
+            if(name){
+                setUserName(name);
+            }
+
+        }
+
+        fetchUserNames();
+    },[])
 
     async function fetchHabits() {
         const { data, error } = await supabase
@@ -129,6 +150,7 @@ export default function VerticalWeeklyTower({user}) {
 
     return (
         <div className="bg-gray-900 p-4 rounded shadow text-white overflow-x-auto">
+            <h1> Hello {userName} !</h1>
             <h2 className="text-xl font-semibold mb-6">Weekly Habit Board</h2>
 
             {/* Columns for each day */}

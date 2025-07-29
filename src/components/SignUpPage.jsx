@@ -11,7 +11,15 @@ function SignUpPage() {
     const handleSignUp = async (e) => {
         e.preventDefault(); // if this is not called then react refreshes and loses state
 
-        const {data , error} = await supabase.auth.signUp({name,surname,email,password,});  // data and error as object because thats how supabase returns objects
+        const {data , error} = await supabase.auth.signUp({email,password,
+        options:{
+            data:{
+                name,
+                surname
+            }
+        }
+
+        });  // data and error as object because thats how supabase returns objects
 
         if (error) {
             alert(error.message);
