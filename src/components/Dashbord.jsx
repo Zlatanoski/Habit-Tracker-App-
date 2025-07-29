@@ -51,8 +51,10 @@ export default function Dashboard({user}) {
 
             {/* Main Content */}
             <main className="flex flex-1 p-8 gap-6">
+
                 {/* Table Centered */}
                 <div className="flex-1 bg-gray-800 p-4 rounded shadow">
+
                     <h1 className="text-2xl font-bold mb-4">Your Habits</h1>
                     <VerticalWeeklyTable user={user}></VerticalWeeklyTable>
                 </div>

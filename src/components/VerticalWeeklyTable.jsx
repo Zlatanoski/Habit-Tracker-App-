@@ -149,14 +149,21 @@ export default function VerticalWeeklyTower({user}) {
     const dayNames = Object.keys(habitsByDay);
 
     return (
+
         <div className="bg-gray-900 p-4 rounded shadow text-white overflow-x-auto">
-            <h1> Hello {userName} !</h1>
-            <h2 className="text-xl font-semibold mb-6">Weekly Habit Board</h2>
+
+            <h1 className="mb-4 text-5xl font-extrabold bg-gradient-to-r from-pink-400 to-purple-600 bg-clip-text text-transparent">
+                Hello, {userName}!
+            </h1>
+
+            <h2 className="text-xl text-brandWhite/70 font-normal mt-2">
+                Here are your habits for the week.
+            </h2>
+
 
             {/* Columns for each day */}
             <div className="grid grid-cols-7 gap-4 min-w-[900px]">
                 {dayNames.map((day) => (
-
 
 
                     <div key={day} className="flex flex-col items-center">
@@ -168,32 +175,31 @@ export default function VerticalWeeklyTower({user}) {
                                 let bgColor = "bg-gray-800"
                                 if (completed[key]) {
                                     bgColor = 'bg-green-800'
-                                }
-                                else if(skipped[key]) {
+                                } else if (skipped[key]) {
                                     bgColor = 'bg-red-800'
                                 }
 
-                                return(
-                                <div
-                                    key={idx}
-                                    className={`border-2 p-3 rounded ${bgColor} text-sm ${periodColors[habit.period]}`}
-                                >
-                                    <div className="font-medium">{habit.name}</div>
-                                    <div className="text-gray-400">{habit.time}</div>
-                                    <div className=" flex items-center justify-between">
-                                        <div className=" w-fit">
-                                            <button onClick={() => handleCompleted(day, idx)}
-                                                    className="text-green-400 text-center">Completed
-                                            </button>
-                                        </div>
-                                        <div onClick={() => handleSkipped(day, idx)} className=" w-fit">
-                                            <button className="text-red-500 text-center">Skip</button>
-                                        </div>
+                                return (
+                                    <div
+                                        key={idx}
+                                        className={`border-2 p-3 rounded ${bgColor} text-sm ${periodColors[habit.period]}`}
+                                    >
+                                        <div className="font-medium">{habit.name}</div>
+                                        <div className="text-gray-400">{habit.time}</div>
+                                        <div className=" flex items-center justify-between">
+                                            <div className=" w-fit">
+                                                <button onClick={() => handleCompleted(day, idx)}
+                                                        className="text-green-400 text-center">Completed
+                                                </button>
+                                            </div>
+                                            <div onClick={() => handleSkipped(day, idx)} className=" w-fit">
+                                                <button className="text-red-500 text-center">Skip</button>
+                                            </div>
 
+
+                                        </div>
 
                                     </div>
-
-                                </div>
                                 );
                             })}
                         </div>
@@ -205,12 +211,14 @@ export default function VerticalWeeklyTower({user}) {
                         <button
                             onClick={() => {
                                 setSelectedDay(day)
-                                setOpenedDialog(true)}}
+                                setOpenedDialog(true)
+                            }}
                             className="mt-2 text-xs px-3 py-1 bg-gray-700 text-white border border-dashed border-gray-500 rounded hover:bg-gray-600"
                         >
                             + Add Habit
                         </button>
-                        <ChooseHabitDialog open={openedDialog}  onSave={handleSaveHabit} onClose={() => setOpenedDialog(false) } />
+                        <ChooseHabitDialog open={openedDialog} onSave={handleSaveHabit}
+                                           onClose={() => setOpenedDialog(false)}/>
 
                     </div>
                 ))}

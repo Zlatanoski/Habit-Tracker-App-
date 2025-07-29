@@ -6,7 +6,7 @@ import {Navigate, Route, Routes} from 'react-router-dom';
 import Dashboard from './components/Dashbord';
 import {useEffect, useState} from "react";
 import {supabase} from "./supabaseClient";
-
+import Profile from "./components/Profile";
 
 
 function App() {
@@ -46,6 +46,7 @@ function App() {
               : <Navigate to="/login" replace />
         }
     />
+    <Route path="/profile" element={<Profile />} />
   </Routes>
 
   )
