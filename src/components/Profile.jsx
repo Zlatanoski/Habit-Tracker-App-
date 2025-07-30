@@ -19,7 +19,7 @@ export default function Profile() {
             const user = data.user;
             setName(user.user_metadata?.name || "");
             setSurname(user.user_metadata?.surname || "");
-            setAvatarUrl(user.user_metadata?.avatar_url || "https://via.placeholder.com/100");
+            setAvatarUrl(user.user_metadata?.avatar_url || "/default-picture.jpeg");
             setEmail(user.email);
         };
 
@@ -69,8 +69,11 @@ export default function Profile() {
                 </div>
 
                 <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-6 space-y-4 sm:space-y-0">
-                    <img src={avatarUrl} alt="avatar" className="w-24 h-24 rounded-full border-2 border-indigo-400 object-cover" />
-                    <div className="flex-1 space-y-2">
+                    <img
+                        src={avatarUrl || "/default-picture.jpeg"}
+                        alt="avatar"
+                        className="w-24 h-24 rounded-full object-cover"
+                    />                    <div className="flex-1 space-y-2">
                         <input
                             value={name}
                             onChange={(e) => setName(e.target.value)}
