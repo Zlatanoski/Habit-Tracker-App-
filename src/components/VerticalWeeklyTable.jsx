@@ -64,19 +64,17 @@ export default function VerticalWeeklyTable({ user }) {
                 const { data, error } = await supabase.auth.getUser()
                 if (error) {
                     console.error("Failed to fetch user data.")
-                    setUserName("David") // Fallback for demo
+
                     return
                 }
                 const user = data.user
                 const name = user?.user_metadata?.name
                 if (name) {
                     setUserName(name)
-                } else {
-                    setUserName("David") // Fallback
                 }
             } catch (err) {
                 console.error("Error fetching user:", err)
-                setUserName("David") // Fallback for demo
+
             }
         }
         fetchUserNames()
@@ -108,25 +106,8 @@ export default function VerticalWeeklyTable({ user }) {
             setHabitsByDay(grouped)
         } catch (err) {
             console.error("Error fetching habits:", err)
-            // Set demo data for preview
-            setHabitsByDay({
-                Monday: [
-                    { name: "Morning Workout", time: "07:00", period: "morning" },
-                    { name: "Read Book", time: "20:00", period: "evening" },
-                ],
-                Tuesday: [{ name: "Meditation", time: "06:30", period: "morning" }],
-                Wednesday: [
-                    { name: "Water Intake", time: "09:00", period: "morning" },
-                    { name: "Lunch Walk", time: "13:00", period: "noon" },
-                ],
-                Thursday: [{ name: "Gym Session", time: "18:00", period: "evening" }],
-                Friday: [{ name: "Team Meeting", time: "10:00", period: "morning" }],
-                Saturday: [
-                    { name: "Yoga", time: "08:00", period: "morning" },
-                    { name: "Journal Writing", time: "21:00", period: "evening" },
-                ],
-                Sunday: [{ name: "Family Time", time: "15:00", period: "noon" }],
-            })
+
+
         }
     }
 
@@ -138,15 +119,12 @@ export default function VerticalWeeklyTable({ user }) {
         }
     }, [user])
 
-    const handleCompleted = (day, idx) => {
-        const key = `${day}-${idx}`
-        if (completed[key] || skipped[key]) return
+    async function handleCompleted(habit){
 
-        setCompleted((prev) => ({
-            ...prev,
-            [key]: true,
-        }))
-        console.log("Task completed")
+        await supabase.from("habits").update({status: "completed"}).eq("id",habit.id)
+
+        fetchHabits()
+
     }
 
     async function handleSaveHabit(habitData) {
@@ -176,14 +154,11 @@ export default function VerticalWeeklyTable({ user }) {
         }
     }
 
-    const handleSkipped = (day, idx) => {
-        const key = `${day}-${idx}`
-        if (completed[key] || skipped[key]) return
+    async function handleSkipped(habit){
 
-        setSkipped((prev) => ({
-            ...prev,
-            [key]: true,
-        }))
+        await supabase.from("habits").update({status: "skipped"}).eq("id",habit.id)
+
+        fetchHabits();
     }
 
     const dayNames = Object.keys(habitsByDay)
@@ -275,17 +250,13 @@ export default function VerticalWeeklyTable({ user }) {
 
                                 {/* Habits Container */}
                                 <div className="flex-1 space-y-3">
-                                    {dayHabits.map((habit, idx) => (
+                                    {dayHabits.map((habit) => (
                                         <HabitCard
-                                            key={idx}
+                                            key={habit.id}               // use the real ID
                                             habit={habit}
-                                            day={day}
-                                            idx={idx}
-                                            isToday={isToday}
-                                            completed={completed}
-                                            skipped={skipped}
-                                            onComplete={handleCompleted}
+                                            onComplete={handleCompleted} // this now expects the habit object
                                             onSkip={handleSkipped}
+                                            isToday={day === today}
                                             layout="column"
                                         />
                                     ))}
@@ -375,7 +346,7 @@ export default function VerticalWeeklyTable({ user }) {
                                 <div className="space-y-3">
                                     {dayHabits.map((habit, idx) => (
                                         <HabitCard
-                                            key={idx}
+                                            key={habit.id}
                                             habit={habit}
                                             day={day}
                                             idx={idx}
@@ -411,12 +382,15 @@ export default function VerticalWeeklyTable({ user }) {
 }
 
 // Separate HabitCard component for reusability
-function HabitCard({ habit, day, idx, isToday, completed, skipped, onComplete, onSkip, layout = "column" }) {
-    const key = `${day}-${idx}`
-    const isCompleted = completed[key]
-    const isSkipped = skipped[key]
+function HabitCard({ habit, onComplete, onSkip, isToday, layout }) {
+    const { id, name, time, period, status: habitStatus } = habit
+  1
+    const isCompleted = habitStatus === "completed"
+    const isSkipped = habitStatus === "skipped"
     const periodStyle = periodColors[habit.period] || periodColors.morning
     const PeriodIcon = periodStyle.icon
+
+
 
     let statusStyle = ""
     if (isCompleted) {
@@ -462,13 +436,13 @@ function HabitCard({ habit, day, idx, isToday, completed, skipped, onComplete, o
             {!isCompleted && !isSkipped && (
                 <div className="space-y-2">
                     <button
-                        onClick={() => onComplete(day, idx)}
+                        onClick={() => onComplete(habit)}
                         className="w-full px-2 py-2 bg-emerald-600/20 text-emerald-400 border border-emerald-500/30 rounded-lg hover:bg-emerald-600/30 hover:border-emerald-500/50 transition-all duration-300 text-xs font-medium text-center"
                     >
                         Complete
                     </button>
                     <button
-                        onClick={() => onSkip(day, idx)}
+                        onClick={() => onSkip(habit)}
                         className="w-full px-2 py-2 bg-red-600/20 text-red-400 border border-red-500/30 rounded-lg hover:bg-red-600/30 hover:border-red-500/50 transition-all duration-300 text-xs font-medium text-center"
                     >
                         Skip
