@@ -15,7 +15,6 @@ import { Link } from "react-router-dom"
 
 const menuItems = [
     { label: "Dashboard", icon: HomeIcon, path: "/dashboard", active: true },
-    { label: "Add Habit", icon: PlusCircleIcon, path: "/add-habit" },
     { label: "Progress", icon: ChartBarIcon, path: "/progress" },
     { label: "Profile", icon: UserCircleIcon, path: "/profile" },
 ]

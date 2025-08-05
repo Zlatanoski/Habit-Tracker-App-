@@ -56,7 +56,7 @@ export default function VerticalWeeklyTable({ user }) {
     const [completed, setCompleted] = useState({})
     const [skipped, setSkipped] = useState({})
     const [selectedDay, setSelectedDay] = useState(null)
-    const [currentWeekStart, setCurrentWeekStart] = useState(0) // For mobile navigation
+    const [currentWeekStart, setCurrentWeekStart] = useState(0)
 
     useEffect(() => {
         const fetchUserNames = async () => {
@@ -64,17 +64,12 @@ export default function VerticalWeeklyTable({ user }) {
                 const { data, error } = await supabase.auth.getUser()
                 if (error) {
                     console.error("Failed to fetch user data.")
-
                     return
                 }
-                const user = data.user
-                const name = user?.user_metadata?.name
-                if (name) {
-                    setUserName(name)
-                }
+                const name = data.user?.user_metadata?.name
+                if (name) setUserName(name)
             } catch (err) {
                 console.error("Error fetching user:", err)
-
             }
         }
         fetchUserNames()
@@ -83,48 +78,28 @@ export default function VerticalWeeklyTable({ user }) {
     async function fetchHabits() {
         try {
             const { data, error } = await supabase.from("habits").select("*")
-
             if (error) {
                 console.error("Fetch failed:", error)
                 return
             }
-
-            const grouped = {
-                Monday: [],
-                Tuesday: [],
-                Wednesday: [],
-                Thursday: [],
-                Friday: [],
-                Saturday: [],
-                Sunday: [],
-            }
-
+            const grouped = makeEmptyBoard()
             data.forEach((habit) => {
                 if (grouped[habit.day]) grouped[habit.day].push(habit)
             })
-
             setHabitsByDay(grouped)
         } catch (err) {
             console.error("Error fetching habits:", err)
-
-
         }
     }
 
     useEffect(() => {
-        if (user) {
-            fetchHabits()
-        } else {
-            fetchHabits() // Still fetch for demo purposes
-        }
+        if (user) fetchHabits()
+        else fetchHabits() // demo
     }, [user])
 
-    async function handleCompleted(habit){
-
-        await supabase.from("habits").update({status: "completed"}).eq("id",habit.id)
-
+    async function handleCompleted(habit) {
+        await supabase.from("habits").update({ status: "completed" }).eq("id", habit.id)
         fetchHabits()
-
     }
 
     async function handleSaveHabit(habitData) {
@@ -132,50 +107,41 @@ export default function VerticalWeeklyTable({ user }) {
             name: habitData.task,
             time: habitData.time,
             period: habitData.period,
-            day: habitData.day, // Now comes from the dialog
+            day: habitData.day,
         }
-
         try {
-            const { data, error } = await supabase.from("habits").insert([row], { returning: "minimal" })
-
-            console.log("Insert response:", { data, error })
-            if (error) {
-                console.error("Insert failed:", error)
-            } else {
+            const { error } = await supabase.from("habits").insert([row], { returning: "minimal" })
+            if (error) console.error("Insert failed:", error)
+            else {
                 await fetchHabits()
                 setOpenedDialog(false)
                 setSelectedDay(null)
             }
         } catch (err) {
             console.error("Error saving habit:", err)
-            // For demo purposes, just close the dialog
             setOpenedDialog(false)
             setSelectedDay(null)
         }
     }
 
-    async function handleSkipped(habit){
-
-        await supabase.from("habits").update({status: "skipped"}).eq("id",habit.id)
-
-        fetchHabits();
+    async function handleSkipped(habit) {
+        await supabase.from("habits").update({ status: "skipped" }).eq("id", habit.id)
+        fetchHabits()
     }
 
     const dayNames = Object.keys(habitsByDay)
     const today = new Date().toLocaleDateString("en-US", { weekday: "long" })
 
-    // Mobile navigation functions
     const nextDays = () => {
         setCurrentWeekStart((prev) => Math.min(prev + 3, dayNames.length - 3))
     }
-
     const prevDays = () => {
         setCurrentWeekStart((prev) => Math.max(prev - 3, 0))
     }
 
     return (
         <div className="space-y-6">
-            {/* Header with Add Habit Button */}
+            {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
                 <div className="text-center sm:text-left">
                     <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-pink-400 via-purple-500 to-blue-500 bg-clip-text text-transparent mb-2">
@@ -183,11 +149,9 @@ export default function VerticalWeeklyTable({ user }) {
                     </h1>
                     <p className="text-slate-400 text-sm sm:text-base">Here are your habits for the week</p>
                 </div>
-
-                {/* Prominent Add Habit Button */}
                 <button
                     onClick={() => {
-                        setSelectedDay(null) // Don't pre-select a day
+                        setSelectedDay(null)
                         setOpenedDialog(true)
                     }}
                     className="group relative px-4 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold rounded-xl sm:rounded-2xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
@@ -199,13 +163,11 @@ export default function VerticalWeeklyTable({ user }) {
                         </div>
                         <span className="text-sm sm:text-lg">Add New Habit</span>
                     </div>
-
-                    {/* Animated background effect */}
                     <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20 rounded-xl sm:rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></div>
                 </button>
             </div>
 
-            {/* Mobile Navigation (visible on small screens) */}
+            {/* Mobile nav */}
             <div className="flex items-center justify-between sm:hidden mb-4">
                 <button
                     onClick={prevDays}
@@ -226,17 +188,15 @@ export default function VerticalWeeklyTable({ user }) {
                 </button>
             </div>
 
-            {/* Weekly Grid - Responsive */}
+            {/* Week Grid */}
             <div className="w-full">
-                {/* Large Desktop View - All 7 days in columns (1920px+) */}
+                {/* Desktop */}
                 <div className="hidden 2xl:grid 2xl:grid-cols-7 gap-4">
                     {dayNames.map((day) => {
                         const isToday = day === today
                         const dayHabits = habitsByDay[day] || []
-
                         return (
                             <div key={day} className="flex flex-col min-h-[400px]">
-                                {/* Day Header */}
                                 <div
                                     className={`text-center p-3 rounded-xl mb-4 ${
                                         isToday
@@ -245,23 +205,21 @@ export default function VerticalWeeklyTable({ user }) {
                                     }`}
                                 >
                                     <div className="font-semibold text-sm">{day}</div>
-                                    {isToday && <div className="text-xs text-blue-400 mt-1">Today</div>}
+                                    <div className={`text-xs text-blue-400 mt-1 ${!isToday ? "invisible" : ""}`}>
+                                        Today
+                                    </div>
                                 </div>
-
-                                {/* Habits Container */}
                                 <div className="flex-1 space-y-3">
                                     {dayHabits.map((habit) => (
                                         <HabitCard
-                                            key={habit.id}               // use the real ID
+                                            key={habit.id}
                                             habit={habit}
-                                            onComplete={handleCompleted} // this now expects the habit object
+                                            onComplete={handleCompleted}
                                             onSkip={handleSkipped}
-                                            isToday={day === today}
+                                            isToday={isToday}
                                             layout="column"
                                         />
                                     ))}
-
-                                    {/* Empty State */}
                                     {dayHabits.length === 0 && <EmptyState />}
                                 </div>
                             </div>
@@ -269,15 +227,13 @@ export default function VerticalWeeklyTable({ user }) {
                     })}
                 </div>
 
-                {/* Vertical Layout for Medium to Large screens (768px - 1919px) */}
+                {/* Tablet */}
                 <div className="hidden sm:block 2xl:hidden space-y-6">
                     {dayNames.map((day) => {
                         const isToday = day === today
                         const dayHabits = habitsByDay[day] || []
-
                         return (
                             <div key={day} className="w-full">
-                                {/* Day Header */}
                                 <div
                                     className={`flex items-center justify-between p-4 rounded-xl mb-4 ${
                                         isToday
@@ -287,14 +243,14 @@ export default function VerticalWeeklyTable({ user }) {
                                 >
                                     <div>
                                         <div className="font-semibold text-lg">{day}</div>
-                                        {isToday && <div className="text-sm text-blue-400 mt-1">Today</div>}
+                                        <div className={`text-sm text-blue-400 mt-1 ${!isToday ? "invisible" : ""}`}>
+                                            Today
+                                        </div>
                                     </div>
                                     <div className="text-sm text-slate-400">
                                         {dayHabits.length} habit{dayHabits.length !== 1 ? "s" : ""}
                                     </div>
                                 </div>
-
-                                {/* Habits Container - Horizontal layout */}
                                 {dayHabits.length > 0 ? (
                                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                                         {dayHabits.map((habit, idx) => (
@@ -322,15 +278,13 @@ export default function VerticalWeeklyTable({ user }) {
                     })}
                 </div>
 
-                {/* Mobile View - 1 column, with navigation */}
+                {/* Mobile */}
                 <div className="sm:hidden space-y-6">
                     {dayNames.slice(currentWeekStart, currentWeekStart + 3).map((day) => {
                         const isToday = day === today
                         const dayHabits = habitsByDay[day] || []
-
                         return (
                             <div key={day} className="flex flex-col">
-                                {/* Day Header */}
                                 <div
                                     className={`text-center p-4 rounded-xl mb-4 ${
                                         isToday
@@ -339,10 +293,10 @@ export default function VerticalWeeklyTable({ user }) {
                                     }`}
                                 >
                                     <div className="font-semibold text-base">{day}</div>
-                                    {isToday && <div className="text-xs text-blue-400 mt-1">Today</div>}
+                                    <div className={`text-xs text-blue-400 mt-1 ${!isToday ? "invisible" : ""}`}>
+                                        Today
+                                    </div>
                                 </div>
-
-                                {/* Habits Container */}
                                 <div className="space-y-3">
                                     {dayHabits.map((habit, idx) => (
                                         <HabitCard
@@ -358,8 +312,6 @@ export default function VerticalWeeklyTable({ user }) {
                                             layout="mobile"
                                         />
                                     ))}
-
-                                    {/* Empty State */}
                                     {dayHabits.length === 0 && <EmptyState />}
                                 </div>
                             </div>
@@ -368,7 +320,6 @@ export default function VerticalWeeklyTable({ user }) {
                 </div>
             </div>
 
-            {/* Dialog */}
             <ChooseHabitDialog
                 open={openedDialog}
                 onSave={handleSaveHabit}
@@ -381,58 +332,35 @@ export default function VerticalWeeklyTable({ user }) {
     )
 }
 
-// Separate HabitCard component for reusability
 function HabitCard({ habit, onComplete, onSkip, isToday, layout }) {
     const { id, name, time, period, status: habitStatus } = habit
-  1
     const isCompleted = habitStatus === "completed"
     const isSkipped = habitStatus === "skipped"
     const periodStyle = periodColors[habit.period] || periodColors.morning
     const PeriodIcon = periodStyle.icon
 
-
-
     let statusStyle = ""
-    if (isCompleted) {
-        statusStyle = "bg-emerald-500/20 border-emerald-500/40"
-    } else if (isSkipped) {
-        statusStyle = "bg-red-500/20 border-red-500/40"
-    } else {
-        statusStyle = `bg-gradient-to-br ${periodStyle.bg} ${periodStyle.border}`
-    }
+    if (isCompleted) statusStyle = "bg-emerald-500/20 border-emerald-500/40"
+    else if (isSkipped) statusStyle = "bg-red-500/20 border-red-500/40"
+    else statusStyle = `bg-gradient-to-br ${periodStyle.bg} ${periodStyle.border}`
 
     return (
-        <div
-            className={`border rounded-xl p-4 transition-all duration-300 ${!isToday ? "hover:scale-[1.02]" : ""} ${statusStyle}`}
-        >
-            {/* Habit Header */}
+        <div className={`border rounded-xl p-4 transition-all duration-300 ${!isToday ? "hover:scale-[1.02]" : ""} ${statusStyle}`}>
             <div className="flex items-start justify-between mb-3">
                 <div className="flex items-center space-x-2">
                     <PeriodIcon className={`w-4 h-4 ${periodStyle.text}`} />
-                    <span className="font-medium text-white text-sm">{habit.name}</span>
+                    <span className="font-medium text-white text-sm">{name}</span>
                 </div>
                 {(isCompleted || isSkipped) && (
-                    <div
-                        className={`w-5 h-5 rounded-full flex items-center justify-center ${
-                            isCompleted ? "bg-emerald-500" : "bg-red-500"
-                        }`}
-                    >
-                        {isCompleted ? (
-                            <CheckCircleIcon className="w-3 h-3 text-white" />
-                        ) : (
-                            <XMarkIcon className="w-3 h-3 text-white" />
-                        )}
+                    <div className={`w-5 h-5 rounded-full flex items-center justify-center ${isCompleted ? "bg-emerald-500" : "bg-red-500"}`}>
+                        {isCompleted ? <CheckCircleIcon className="w-3 h-3 text-white" /> : <XMarkIcon className="w-3 h-3 text-white" />}
                     </div>
                 )}
             </div>
-
-            {/* Time */}
             <div className="flex items-center space-x-2 mb-3">
                 <ClockIcon className="w-3 h-3 text-slate-400" />
-                <span className="text-xs text-slate-400">{habit.time}</span>
+                <span className="text-xs text-slate-400">{time}</span>
             </div>
-
-            {/* Action Buttons */}
             {!isCompleted && !isSkipped && (
                 <div className="space-y-2">
                     <button
@@ -449,15 +377,12 @@ function HabitCard({ habit, onComplete, onSkip, isToday, layout }) {
                     </button>
                 </div>
             )}
-
-            {/* Status Message */}
             {isCompleted && <div className="text-center text-emerald-400 text-xs font-medium">✓ Completed</div>}
             {isSkipped && <div className="text-center text-red-400 text-xs font-medium">✗ Skipped</div>}
         </div>
     )
 }
 
-// Separate EmptyState component
 function EmptyState() {
     return (
         <div className="text-center py-8 text-slate-500">

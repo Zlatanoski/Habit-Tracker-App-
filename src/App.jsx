@@ -21,13 +21,28 @@ function App() {
       setUser(session?.user ?? null)
     })
     //returns a subscription object that we can use to stop listening later
-    const { data: { subscription },} = supabase.auth.onAuthStateChange((_,session)=>{
+    const { data: { subscription },} = supabase.auth.onAuthStateChange(async (event,session)=>{
+
+      if(event === "SIGNED_IN" && session?.user){
+
+        const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
 
+        const { data, error } = await supabase
+            .from("profiles")
+            .upsert({
+              id: session.user.id,
+              timezone
+            });
 
-        //if something changes in the authentication(sign in/sign out events) we have to check whether it changed to null or there is still an user
+        if (error) {
+          console.error('Error upserting profile:', error);
+        } else {
+          console.log('Profile upserted successfully:', data);
+        }
+      }
+
       setUser(session?.user ?? null)
-
     });
 
     return () => subscription.unsubscribe()
