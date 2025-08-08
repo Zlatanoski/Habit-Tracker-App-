@@ -15,6 +15,9 @@ import {
 } from "@heroicons/react/24/solid"
 import ChooseHabitDialog from "./ChooseHabitDialog"
 import { supabase } from "../supabaseClient"
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
+
 
 const periodColors = {
     morning: {
@@ -57,6 +60,11 @@ export default function VerticalWeeklyTable({ user }) {
     const [skipped, setSkipped] = useState({})
     const [selectedDay, setSelectedDay] = useState(null)
     const [currentWeekStart, setCurrentWeekStart] = useState(0)
+
+    //handling adding a habit to a day that has already passed - Prevention
+    const [alertOpen, setAlertOpen] = useState(false);
+    const [alertMessage, setAlertMessage] = useState("");
+    const [alertSeverity, setAlertSeverity] = useState("error");
 
     useEffect(() => {
         const fetchUserNames = async () => {
@@ -319,11 +327,27 @@ export default function VerticalWeeklyTable({ user }) {
                     })}
                 </div>
             </div>
+            {alertOpen && (
+                <div className="fixed bottom-4 right-4 z-50">
+                    <Alert severity={alertSeverity} onClose={() => setAlertOpen(false)}>
+                        <AlertTitle>{alertSeverity === 'error' ? 'Error' : alertSeverity === 'warning' ? 'Warning' : 'Notice'}</AlertTitle>
+                        {alertMessage}
+                    </Alert>
+                </div>
+            )}
+
 
             <ChooseHabitDialog
                 open={openedDialog}
                 onSave={handleSaveHabit}
                 onClose={() => {
+                    setOpenedDialog(false)
+                    setSelectedDay(null)
+                }}
+                onError={(message,severity) => {
+                    setAlertMessage(message)
+                    setAlertSeverity(severity)
+                    setAlertOpen(true)
                     setOpenedDialog(false)
                     setSelectedDay(null)
                 }}
@@ -345,6 +369,7 @@ function HabitCard({ habit, onComplete, onSkip, isToday, layout }) {
     else statusStyle = `bg-gradient-to-br ${periodStyle.bg} ${periodStyle.border}`
 
     return (
+
         <div className={`border rounded-xl p-4 transition-all duration-300 ${!isToday ? "hover:scale-[1.02]" : ""} ${statusStyle}`}>
             <div className="flex items-start justify-between mb-3">
                 <div className="flex items-center space-x-2">
@@ -379,7 +404,9 @@ function HabitCard({ habit, onComplete, onSkip, isToday, layout }) {
             )}
             {isCompleted && <div className="text-center text-emerald-400 text-xs font-medium">✓ Completed</div>}
             {isSkipped && <div className="text-center text-red-400 text-xs font-medium">✗ Skipped</div>}
+
         </div>
+
     )
 }
 

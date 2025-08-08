@@ -2,6 +2,8 @@
 
 import { useState } from "react"
 import { XMarkIcon, ClockIcon, SunIcon, CloudIcon, MoonIcon } from "@heroicons/react/24/solid"
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
 
 const periodOptions = [
     { value: "morning", label: "Morning", icon: SunIcon, color: "text-amber-400" },
@@ -11,18 +13,34 @@ const periodOptions = [
 
 const dayOptions = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
 
-export default function ChooseHabitDialog({ open, onSave, onClose }) {
+export default function ChooseHabitDialog({ open, onSave, onClose, onError }) {
     const [task, setTask] = useState("")
     const [time, setTime] = useState("")
-    const [period, setPeriod] = useState("morning")
-    const [day, setDay] = useState("Monday")
+    const [period, setPeriod] = useState("")
+    const [day, setDay] = useState("")
 
-    const handleSubmit = (e) => {
+
+
+
+
+    const handleSubmit = (e) => {1
         e.preventDefault()
         if (!task.trim() || !time.trim()) {
-            alert("Please fill in all fields")
+            onError("Please fill in all fields", "error")
             return
         }
+
+        const today = new Date();
+
+        const currentDayIndex = today.getDay(); // return
+
+        const selectedDayIndex = dayOptions.indexOf(day);
+
+        if (selectedDayIndex < currentDayIndex) {
+            onError("You can not add habit to a day that has already passed!", "warning")
+            return
+        }
+
 
         onSave({
             task: task.trim(),
