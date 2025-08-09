@@ -10,7 +10,7 @@ function Navbar() {
 
             <div className="absolute left-1/2 transform -translate-x-1/2 flex gap-4">
                 <button className="rounded-xl px-4 py-2 text-sm font-bold hover:bg-gray-700">
-                    Pricing
+                    <Link to="/pricing">Pricing</Link>
                 </button>
                 <button className="rounded-xl px-4 py-2 text-sm font-bold hover:bg-gray-700">
                     Blog

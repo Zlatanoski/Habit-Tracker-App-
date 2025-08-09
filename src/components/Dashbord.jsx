@@ -12,12 +12,16 @@ import {
 } from "@heroicons/react/24/solid"
 import VerticalWeeklyTable from "./VerticalWeeklyTable"
 import { Link } from "react-router-dom"
+import {supabase} from "../supabaseClient";
+import {useNavigate} from "react-router-dom";
 
 const menuItems = [
     { label: "Dashboard", icon: HomeIcon, path: "/dashboard", active: true },
     { label: "Progress", icon: ChartBarIcon, path: "/progress" },
     { label: "Profile", icon: UserCircleIcon, path: "/profile" },
 ]
+
+
 
 const habits = [
     { id: 1, name: "Drink Water", streak: 5, status: "Approved", color: "blue" },
@@ -51,11 +55,18 @@ const getStatusIcon = (status) => {
     }
 }
 
-export default function Dashboard({ user }) {
-    const handleLogout = () => {
-        // Add logout logic here
-        console.log("Logging out...")
+export default function Dashboard({ user ,setUser }) {
+    const navigate = useNavigate();
+    async function handleLogout(){
+        await supabase.auth.signOut()
+        setUser(null)
+        navigate('/')
+
     }
+
+
+
+
 
     return (
         <div className="flex min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white">

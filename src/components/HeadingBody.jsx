@@ -52,6 +52,21 @@ function HeadingBody() {
                         className="w-48 sm:w-56 md:w-64 lg:w-72 xl:w-80"
                     />
                 </div>
+
+
+            </div>
+            <div className="col-span-full flex justify-center">
+                <figure className="w-full max-w-[1200px] px-2">
+                    <div className="rounded-2xl border border-white/10 bg-slate-900/30 p-2 shadow-2xl">
+                        <img
+                            src="/table.png"
+                            alt="Daily habits preview"
+                            className="w-full h-auto rounded-xl object-contain"
+                            loading="lazy"
+                            decoding="async"
+                        />
+                    </div>
+                </figure>
             </div>
         </div>
     );

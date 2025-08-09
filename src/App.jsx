@@ -7,7 +7,7 @@ import Dashboard from './components/Dashbord';
 import {useEffect, useState} from "react";
 import {supabase} from "./supabaseClient";
 import Profile from "./components/Profile";
-
+import Pricing from "./components/Pricing";
 
 function App() {
 
@@ -57,11 +57,13 @@ function App() {
         path="/dashbord"
         element={
           user
-              ? <Dashboard user={user}/>
+              ? <Dashboard user={user} setUser={setUser}/>
               : <Navigate to="/login" replace />
         }
     />
     <Route path="/profile" element={<Profile />} />
+    <Route path="/pricing" element={<Pricing/>} />
+
   </Routes>
 
   )
