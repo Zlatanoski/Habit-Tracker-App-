@@ -2,10 +2,11 @@ import React from 'react';
 import ema from '../assets/ema.png';
 import john from '../assets/john.png';
 import {Link} from "react-router-dom";
+import Footerce from "../components/Footer";
 
 function HeadingBody() {
     return (
-        <div className="flex font-inter flex-col items-center min-h-screen bg-white px-4">
+        <div className="flex font-inter flex-col items-center min-h-screen bg-white ">
 
             <div className="mt-20 text-center max-w-2xl pt-10  ">
                 <h1 className="font-bold font-inter text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-brandBlue leading-snug">
@@ -55,7 +56,19 @@ function HeadingBody() {
 
 
             </div>
-            <div className="col-span-full flex justify-center">
+
+            <div className=" mt-10">
+                <div className="text-3xl font-bold mb-2  mt-4 font-inter  sm:text-xl md:text-2xl lg:text-3xl ">Plan, Act, Achieve</div>
+                <p className= " mt-6 mb-5 text-base sm:text-lg md:text-xl text-gray-600 font-medium" >
+                    Kickstart your day with a focused, well-structured routine that guides you toward your goals.
+                    <br/>
+                    Here’s a glimpse of how your day with BBetter could unfold:
+                </p>
+            </div>
+
+
+
+            <div className="col-span-full flex justify-center mt-10">
                 <figure className="w-full max-w-[1200px] px-2">
                     <div className="rounded-2xl border border-white/10 bg-slate-900/30 p-2 shadow-2xl">
                         <img
@@ -68,7 +81,16 @@ function HeadingBody() {
                     </div>
                 </figure>
             </div>
+
+
+
+        <Footerce></Footerce>
+
+
         </div>
+
+
+
     );
 }
 
