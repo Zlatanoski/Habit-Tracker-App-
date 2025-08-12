@@ -57,9 +57,9 @@ function HeadingBody() {
 
             </div>
 
-            <div className=" mt-10">
+            <div className=" mt-10 text-center">
                 <div className="text-3xl font-bold mb-2  mt-4 font-inter  sm:text-xl md:text-2xl lg:text-3xl ">Plan, Act, Achieve</div>
-                <p className= " mt-6 mb-5 text-base sm:text-lg md:text-xl text-gray-600 font-medium" >
+                <p className= " mt-6 mb-5 text-base sm:text-[15px] md:text-xl text-gray-600 font-medium" >
                     Kickstart your day with a focused, well-structured routine that guides you toward your goals.
                     <br/>
                     Here’s a glimpse of how your day with BBetter could unfold:
@@ -70,7 +70,7 @@ function HeadingBody() {
 
             <div className="col-span-full flex justify-center mt-10">
                 <figure className="w-full max-w-[1200px] px-2">
-                    <div className="rounded-2xl border border-white/10 bg-slate-900/30 p-2 shadow-2xl">
+                    <div className="rounded-2xl border-[1px] border-white/5  bg-slate-900/30 p-[6px] shadow-2xl">
                         <img
                             src="/table.png"
                             alt="Daily habits preview"

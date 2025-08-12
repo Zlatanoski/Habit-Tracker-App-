@@ -9,31 +9,35 @@ function LoginPage() {
    const [email,setEmail]=useState('');
    const [password,setPassword]=useState('');
    const navigate = useNavigate();
-
+   const [loading,setLoading]=useState(false);
 
     const handleLogin = async (e) => {
         e.preventDefault();
+        if (loading) return;
+        setLoading(true);
+        setMessage("");
 
-        const {data,error} = await supabase.auth.signInWithPassword({email,password})
+        try {
+            const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
-        if(error){
-            console.error("Error message:" ,error.message)
-            setMessage('Wrong email or password!');
+            if (error) {
+                console.error("Error message:", error.message);
+                setMessage("Wrong email or password!");
+                return;
+            }
 
-            return
+            console.log("Successfully logged in", data);
+            setMessage("Logged in successfully!");
+            // Navigate immediately; no setTimeout
+            navigate("/dashbord", { replace: true }); // <-- make sure this path exists
+        } catch (err) {
+            console.error("Unexpected error:", err);
+            setMessage("Something went wrong. Please try again.");
+        } finally {
+            // Always clear loading so the UI can't get stuck
+            setLoading(false);
         }
-        else{
-            console.log("Successfully logged in",data )
-
-                setMessage("Logged in successfully!");
-            setTimeout(() => {
-                navigate("/dashbord");
-            }, 1500);
-
-        }
-
-
-    }
+    };
 
 
   return (
