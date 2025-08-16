@@ -17,7 +17,7 @@ function App() {
     useEffect(() => {
         let mounted = true;
 
-
+//Added mounted to prevent setUser before getSession finishes but user already redirected and unmounted the component
         supabase.auth.getSession().then(({ data: { session } }) => {
             if (!mounted) return;
             setUser(session?.user ?? null);
@@ -33,7 +33,9 @@ function App() {
 
         return () => {
             mounted = false;
+
             subscription.unsubscribe();
+
         };
     }, []);
 
