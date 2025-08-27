@@ -188,21 +188,21 @@ export default function VerticalWeeklyTable({ user }) {
             </div>
 
             {/* Mobile nav (for 3-day pager) */}
-            <div className="flex items-center justify-between sm:hidden mb-4">
+            <div className="flex items-center justify-between sm:hidden mb-6 px-2">
                 <button
                     onClick={prevDays}
                     disabled={currentWeekStart === 0}
-                    className="p-2 bg-slate-700/50 border border-slate-600/50 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="flex items-center justify-center w-10 h-10 bg-slate-700/50 border border-slate-600/50 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-slate-600/50 transition-colors"
                 >
                     <ChevronLeftIcon className="w-5 h-5 text-slate-300" />
                 </button>
-                <span className="text-slate-400 text-sm">
-          {dayNames.slice(currentWeekStart, currentWeekStart + 3).join(" • ")}
-        </span>
+                <span className="text-slate-400 text-sm font-medium px-4 text-center">
+                    {dayNames.slice(currentWeekStart, currentWeekStart + 3).join(" • ")}
+                </span>
                 <button
                     onClick={nextDays}
                     disabled={currentWeekStart >= Math.max(dayNames.length - 3, 0)}
-                    className="p-2 bg-slate-700/50 border border-slate-600/50 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="flex items-center justify-center w-10 h-10 bg-slate-700/50 border border-slate-600/50 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-slate-600/50 transition-colors"
                 >
                     <ChevronRightIcon className="w-5 h-5 text-slate-300" />
                 </button>
@@ -210,8 +210,8 @@ export default function VerticalWeeklyTable({ user }) {
 
             {/* Week Grid */}
             <div className="w-full">
-                {/* Desktop: 7 columns from md and up */}
-                <div className="hidden md:grid md:grid-cols-7 gap-4">
+                {/* Desktop: 7 columns from lg and up */}
+                <div className="hidden lg:grid lg:grid-cols-7 gap-4">
                     {dayNames.map((day) => {
                         const isToday = day === today
                         const dayHabits = habitsByDay[day] || []
@@ -245,7 +245,47 @@ export default function VerticalWeeklyTable({ user }) {
                     })}
                 </div>
 
-                {/* Tablet: stacked days (visible on sm..(md-1)) */}
+                {/* Medium screens: 2-column grid (visible on md..lg-1) */}
+                <div className="hidden md:block lg:hidden">
+                    <div className="grid grid-cols-2 gap-6">
+                        {dayNames.map((day) => {
+                            const isToday = day === today
+                            const dayHabits = habitsByDay[day] || []
+                            return (
+                                <div key={day} className="flex flex-col">
+                                    <div
+                                        className={`text-center p-3 rounded-xl mb-4 ${
+                                            isToday
+                                                ? "bg-blue-600/20 border border-blue-500/30 text-blue-400"
+                                                : "bg-slate-700/30 border border-slate-600/30 text-slate-300"
+                                        }`}
+                                    >
+                                        <div className="font-semibold text-sm">{day}</div>
+                                        <div className={`text-xs text-blue-400 mt-1 ${!isToday ? "invisible" : ""}`}>Today</div>
+                                    </div>
+                                    <div className="space-y-3">
+                                        {dayHabits.length > 0 ? (
+                                            dayHabits.map((habit) => (
+                                                <HabitCard
+                                                    key={habit.id}
+                                                    habit={habit}
+                                                    onComplete={handleCompleted}
+                                                    onSkip={handleSkipped}
+                                                    isToday={isToday}
+                                                    layout="column"
+                                                />
+                                            ))
+                                        ) : (
+                                            <EmptyState />
+                                        )}
+                                    </div>
+                                </div>
+                            )
+                        })}
+                    </div>
+                </div>
+
+                {/* Small screens: stacked days (visible on sm..md-1) */}
                 <div className="hidden sm:block md:hidden space-y-6">
                     {dayNames.map((day) => {
                         const isToday = day === today
@@ -267,35 +307,31 @@ export default function VerticalWeeklyTable({ user }) {
                                         {dayHabits.length} habit{dayHabits.length !== 1 ? "s" : ""}
                                     </div>
                                 </div>
-                                {dayHabits.length > 0 ? (
-                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                                        {dayHabits.map((habit, idx) => (
+                                <div className="space-y-3">
+                                    {dayHabits.length > 0 ? (
+                                        dayHabits.map((habit) => (
                                             <HabitCard
                                                 key={habit.id}
                                                 habit={habit}
-                                                day={day}
-                                                idx={idx}
-                                                isToday={isToday}
-                                                completed={completed}
-                                                skipped={skipped}
                                                 onComplete={handleCompleted}
                                                 onSkip={handleSkipped}
+                                                isToday={isToday}
                                                 layout="row"
                                             />
-                                        ))}
-                                    </div>
-                                ) : (
-                                    <div className="bg-slate-800/30 border border-slate-700/50 rounded-xl p-8">
-                                        <EmptyState />
-                                    </div>
-                                )}
+                                        ))
+                                    ) : (
+                                        <div className="bg-slate-800/30 border border-slate-700/50 rounded-xl p-6">
+                                            <EmptyState />
+                                        </div>
+                                    )}
+                                </div>
                             </div>
                         )
                     })}
                 </div>
 
                 {/* Mobile: 3-day pager (visible on <sm) */}
-                <div className="sm:hidden space-y-6">
+                <div className="sm:hidden space-y-4 px-2">
                     {dayNames.slice(currentWeekStart, currentWeekStart + 3).map((day) => {
                         const isToday = day === today
                         const dayHabits = habitsByDay[day] || []
@@ -308,25 +344,26 @@ export default function VerticalWeeklyTable({ user }) {
                                             : "bg-slate-700/30 border border-slate-600/30 text-slate-300"
                                     }`}
                                 >
-                                    <div className="font-semibold text-base">{day}</div>
+                                    <div className="font-semibold text-lg">{day}</div>
                                     <div className={`text-xs text-blue-400 mt-1 ${!isToday ? "invisible" : ""}`}>Today</div>
                                 </div>
                                 <div className="space-y-3">
-                                    {dayHabits.map((habit, idx) => (
-                                        <HabitCard
-                                            key={habit.id}
-                                            habit={habit}
-                                            day={day}
-                                            idx={idx}
-                                            isToday={isToday}
-                                            completed={completed}
-                                            skipped={skipped}
-                                            onComplete={handleCompleted}
-                                            onSkip={handleSkipped}
-                                            layout="mobile"
-                                        />
-                                    ))}
-                                    {dayHabits.length === 0 && <EmptyState />}
+                                    {dayHabits.length > 0 ? (
+                                        dayHabits.map((habit) => (
+                                            <HabitCard
+                                                key={habit.id}
+                                                habit={habit}
+                                                onComplete={handleCompleted}
+                                                onSkip={handleSkipped}
+                                                isToday={isToday}
+                                                layout="mobile"
+                                            />
+                                        ))
+                                    ) : (
+                                        <div className="bg-slate-800/30 border border-slate-700/50 rounded-xl p-6">
+                                            <EmptyState />
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         )
